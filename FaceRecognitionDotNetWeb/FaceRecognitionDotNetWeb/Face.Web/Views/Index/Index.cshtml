@@ -29,6 +29,7 @@
 
 <script>
     var baseData = [];
+    var src = "";
     function base64(imgSrc,f) { 
            //var canvas = document.createElement("canvas");   //创建canvas DOM元素，并设置其宽高和图片一样
         var canvas = document.getElementById("canvas"),//获取canvas
@@ -44,16 +45,13 @@
             };
     }
       
-    function FaceEntry(data, name) {
-        debugger
+    function FaceEntry(data, name) {  
+        data = data.split(',')[1];
+
         $.ajax({
             type: "post",
-            contentType:"application/json;charset=utf-8",
-            url: "http://192.168.1.73:8099/Home/test1",
-            contentType: false,
-            cache: false,
-            currentType: false,
-            processData: false,
+            dataType: "json",
+            url: "http://192.168.1.73:8099/Home/FaceEntry",
             data: {
                 base64: data,
                 name: name
@@ -85,9 +83,7 @@
                 success: function (res) {  
                     var img = $("#yt");
                     $(img).attr('src', res.filePath);
-                    base64(res.filePath, function (data) {
-                        FaceEntry(data,"testData");
-                    }); 
+                    src = res.filePath;
                 }
             });
         }); 
@@ -100,28 +96,30 @@
 
             $.ajax({
                 type: "post",
-                contentType: "application/json;charset=utf-8",
-                url: "http://192.168.1.73:8099/Home/test3",
-                contentType: false,
-                cache: false,
-                currentType: false,
-                processData: false,
+                dataType: 'json',
+                url: "http://192.168.1.73:8099/Home/test",
                 data: {par:"web"},
                 success: function (res) {
-                    alert(res);
+                    $("#status").html(res)
                 }
-            });
+            }); 
+            
+        });
 
-            $.post('http://192.168.1.73:8099/Home/test2', { par: "web" }, function (text, status) { alert(text); });
-
-            $.ajax({
-                type: "post",
-                url: "http://192.168.1.73:8099/Home/test2",
-                data: { par: "web" },
-                success: function (res) {
-                    alert(res);
-                }
-            });
+        $("#enty").click(function () {
+            debugger
+            base64(src, function (data) {
+                data = data.split(',')[1]; 
+                $.ajax({
+                    type: "post",
+                    dataType: 'json',
+                    url: "http://192.168.1.73:8099/Home/FaceRecognitionForIamge",
+                    data: { "": data},
+                    success: function (res) {
+                        $("#status").html(res)
+                    }
+                });
+            }) 
         });
     });
 
@@ -143,10 +141,12 @@
     <form action="Upload" id="uploadForm" method="post" enctype="multipart/form-data">
         <input id="File1" name="fileupload" type="file" value="" />
     </form>
-    <button id="sb">开始识别</button>
-    <button id="base64">重试(请求识别)</button>
-    <button id="test">测试接口是否正常</button>
-    <canvas id="canvas"></canvas>
+    <button id="sb">确认图片</button>
+    <button id="base64">录入图片</button>
+    <button id="enty">识别图片</button>
+    <button id="test">测试服务</button>
+    <canvas id="canvas" style="display:none;"></canvas>
 </div>
+<div id="status"></div>
 
 

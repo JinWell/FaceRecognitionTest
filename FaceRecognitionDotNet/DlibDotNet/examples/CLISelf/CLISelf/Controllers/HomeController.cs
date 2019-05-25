@@ -63,30 +63,12 @@ namespace Face.CLISelf.Controllers
         {
             return FaceServer.FaceEntry(item["base64"].ToString(), item["name"].ToString());
         }
-
+        
         /// <summary>
         /// 录入
         /// </summary> 
         [HttpPost]
-        public string test1(string base64, string name)
-        {
-            return FaceServer.FaceEntry(base64, name);
-        }
-       
-        /// <summary>
-        /// 录入
-        /// </summary> 
-        [HttpPost]
-        public string test2(string par)
-        {
-            return  "传递的参数"+par+"  "+DateTime.Now.ToString()+"在识别程序调用测试通过";
-        }
-
-        /// <summary>
-        /// 录入
-        /// </summary> 
-        [HttpPost]
-        public string test3()
+        public string test()
         {
             return  DateTime.Now.ToString() + "在识别程序调用测试通过";
         }
@@ -101,5 +83,10 @@ namespace Face.CLISelf.Controllers
             return FaceServer.ResetFaceEncodings();
         }
 
+    }
+
+    public class obj
+    {
+        public string par { set; get; }
     }
 }
