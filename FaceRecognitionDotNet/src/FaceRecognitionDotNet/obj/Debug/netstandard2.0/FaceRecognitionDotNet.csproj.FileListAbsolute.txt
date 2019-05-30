@@ -27,7 +27,6 @@ C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecog
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\bin\Debug\netstandard2.0\FaceRecognitionDotNet.deps.json
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\bin\Debug\netstandard2.0\FaceRecognitionDotNet.dll
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\bin\Debug\netstandard2.0\FaceRecognitionDotNet.pdb
-C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\obj\Debug\netstandard2.0\FaceRecognitionDotNet.csprojAssemblyReference.cache
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\obj\Debug\netstandard2.0\FaceRecognitionDotNet.csproj.CoreCompileInputs.cache
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\obj\Debug\netstandard2.0\FaceRecognitionDotNet.AssemblyInfoInputs.cache
 C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\src\FaceRecognitionDotNet\obj\Debug\netstandard2.0\FaceRecognitionDotNet.AssemblyInfo.cs

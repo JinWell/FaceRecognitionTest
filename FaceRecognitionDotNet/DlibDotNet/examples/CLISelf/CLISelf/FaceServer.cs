@@ -17,12 +17,15 @@ namespace Face.CLISelf
     public static class FaceServer
     {
         private static FaceRecognition _FaceRecognition;
+
         //模型对应的标记名
         private static Dictionary<FaceEncoding, string> _faceDictionary;
+
         /// <summary>
         /// 容忍差值
         /// </summary>
         public static double _tolerance = Convert.ToDouble(System.Configuration.ConfigurationManager.AppSettings["tolerance"].ToString());
+       
         /// <summary>
         /// 初始化
         /// </summary>
@@ -32,6 +35,7 @@ namespace Face.CLISelf
             _faceDictionary = GetFaceEncodesList();
             return _faceDictionary.Count;
         }
+
         /// <summary>
         /// 识别
         /// </summary>
@@ -40,15 +44,29 @@ namespace Face.CLISelf
         public static string FaceRecognitionForIamge(string base64)
         {
             byte[] imageBytes = Convert.FromBase64String(base64);
-            return FaceRecognitionForIamge(imageBytes);
+            var data = FaceRecognitionForIamge(imageBytes);
+            var img = string.Empty;
+            if (data != "没有数据" || data!="未能识别")
+            {
+                var f = data.Split('|')[0];
+                //获取识别的照片
+                var file = Directory.GetFiles(@"C:\Users\Jevon\Desktop\FaceRecognitionDotNet\FaceRecognitionDotNet\DlibDotNet\examples\CLISelf\CLISelf\bin\Debug\faces\" + f, "*.jpg");
+                //转换成64
+                img = ImgToBase64String(file.FirstOrDefault());
+            }
+            else
+            {
+                img = data;
+            }
+          
+            return img;
         }
+
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="imageBytes"></param>
-        /// <returns></returns>
+        /// 识别
+        /// </summary> 
         public static string FaceRecognitionForIamge(byte[] imageBytes)
-        {
+        { 
             if (imageBytes.Length > 0)
             {
                 var bitmap = ToFormat24bpprgb(imageBytes);
@@ -82,33 +100,32 @@ namespace Face.CLISelf
                     }
                     else
                     {
-                        return "No Suitable Data";
+                        return "没有数据";
                     }
                 }
                 else
                 {
-                    return "No Recognition";
+                    return "未能识别";
                 }
             }
-            else { return "Error"; }
+            else { return "识别出错"; }
         }
+
         /// <summary>
         /// 入录
         /// </summary>
         /// <param name="base64"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static string FaceEntry(string base64,string name) {
+        public static string FaceEntry(string base64,string name) { 
             base64 = HttpUtility.HtmlDecode(base64);
             byte[] imageBytes = Convert.FromBase64String(base64);
             return FaceEntry(imageBytes, name);
         }
+
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="imageBytes"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// 入录
+        /// </summary> 
         public static string FaceEntry(byte[] imageBytes, string name)
         {
             try
@@ -139,9 +156,7 @@ namespace Face.CLISelf
 
         /// <summary>
         /// 检测人脸
-        /// </summary>
-        /// <param name="base64"></param>
-        /// <returns></returns>
+        /// </summary> 
         public static int FaceCheck(string base64) {
             if (string.IsNullOrWhiteSpace(base64))
                 return 0;
@@ -154,8 +169,9 @@ namespace Face.CLISelf
                 using (var image = bitmap.ToArray2D<RgbPixel>())
                 {
                     var dets = faceDetector.Operator(image);
-                    //foreach (var r in dets)
-                    //    DlibDotNet.Dlib.DrawRectangle(image, r, new RgbPixel { Green = 255 });
+                    //手动添加代码
+                    foreach (var r in dets)
+                        DlibDotNet.Dlib.DrawRectangle(image,r,255); 
                     return dets.Length;
                 }
             }
@@ -170,17 +186,17 @@ namespace Face.CLISelf
             _faceDictionary = GetFaceEncodesList();
             return _faceDictionary.Count;
         }
+
         /// <summary>
         /// 释放
         /// </summary>
         public static void Dispose() {
             _FaceRecognition.Dispose();
         }
+
         /// <summary>
         /// 保存人脸模型
-        /// </summary>
-        /// <param name="encoding"></param>
-        /// <param name="name"></param>
+        /// </summary> 
         private static void SaveFaceEncodes(byte[] imageBytes,FaceEncoding encoding, string name)
         {
             var dest = $"faces/{name}/";
@@ -203,10 +219,10 @@ namespace Face.CLISelf
             }
             File.WriteAllBytes(jpgFilePath, imageBytes);
         }
+
         /// <summary>
         /// 载入已入录人脸模型
-        /// </summary>
-        /// <returns></returns>
+        /// </summary> 
         private static Dictionary<FaceEncoding, string> GetFaceEncodesList()
         {
             Dictionary<FaceEncoding, string> dictionary = new Dictionary<FaceEncoding, string>();
@@ -232,12 +248,33 @@ namespace Face.CLISelf
             }
             return dictionary;
         }
+         
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bs"></param>
-        /// <returns></returns>
-        private static Bitmap ToFormat24bpprgb(byte[] bs)
+        /// 图片转换成base64
+        /// </summary> 
+        public static string ImgToBase64String(string Imagefilename)
+        {
+            try
+            {
+                Bitmap bmp = new Bitmap(Imagefilename); 
+                MemoryStream ms = new MemoryStream();
+                bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                byte[] arr = new byte[ms.Length];
+                ms.Position = 0;
+                ms.Read(arr, 0, (int)ms.Length);
+                ms.Close();
+                return Convert.ToBase64String(arr);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 转换成Bitmap
+        /// </summary> 
+        public static Bitmap ToFormat24bpprgb(byte[] bs)
         {
             MemoryStream ms = new MemoryStream(bs);
             System.Drawing.Image imgr = System.Drawing.Image.FromStream(ms);

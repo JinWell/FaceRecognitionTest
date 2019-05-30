@@ -322,6 +322,7 @@ namespace FaceRecognitionDotNet
                 yield return ret;
             }
         }
+
         /// <summary>
         /// 
         /// </summary>

@@ -50,7 +50,8 @@ namespace Face.CLISelf.Controllers
         [HttpPost]
         public string FaceRecognitionForIamge([FromBody]string base64)
         {
-            return FaceServer.FaceRecognitionForIamge(base64);
+            var r = FaceServer.FaceRecognitionForIamge(base64); 
+            return r;
         }
 
         /// <summary>
@@ -65,12 +66,12 @@ namespace Face.CLISelf.Controllers
         }
         
         /// <summary>
-        /// 录入
-        /// </summary> 
+        /// 测试服务
+        /// </summary>  
         [HttpPost]
-        public string test()
+        public string TestConnected()
         {
-            return  DateTime.Now.ToString() + "在识别程序调用测试通过";
+            return  string.Format("当前服务器时间:{0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         /// <summary>
@@ -81,8 +82,7 @@ namespace Face.CLISelf.Controllers
         public int ResetFaceEncodings()
         {
             return FaceServer.ResetFaceEncodings();
-        }
-
+        } 
     }
 
     public class obj

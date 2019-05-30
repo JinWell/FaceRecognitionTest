@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Face.CLISelf
 {
@@ -50,7 +52,7 @@ namespace Face.CLISelf
                         }
                     }
                 }
-                else if (input.ToLower() == "face init")
+                else if (input.ToLower() == "init")
                 {
                     string[] strs = Directory.GetFiles("photos", "*.*", SearchOption.AllDirectories);
                     m_logger.Debug("初始化图片：{0}张",strs.Length);
@@ -64,9 +66,9 @@ namespace Face.CLISelf
                     }
                     m_logger.Debug("人脸模型初始化成功");
                 }
-                else if (input.ToLower() == "face add")
+                else if (input.ToLower() == "add")
                 {
-                    m_logger.Debug("从add目录开始入录");
+                    m_logger.Debug("从add目录开始识别");
                     string addPath = "add";
                     if ( Directory.Exists(addPath))
                     {  
@@ -109,8 +111,7 @@ namespace Face.CLISelf
                                 catch (Exception ex)
                                 {
                                     //m_logger.Debug("{0},识别为{1}", image, result);
-                                }
-                                m_logger.Debug("{0},识别为{1}", image, result);
+                                } 
                             }
                         }
                         stopwatch.Stop();
@@ -126,7 +127,7 @@ namespace Face.CLISelf
                         m_logger.Error("目录不存在或出错");
                     }
                 }
-                else if (input.ToLower() == "face test")
+                else if (input.ToLower() == "test")
                 {
                     WriteColorLine("请输入目录 ?", ConsoleColor.Yellow);
                     input = Console.ReadLine();
@@ -185,7 +186,40 @@ namespace Face.CLISelf
                     {
                         m_logger.Error("目录不存在或出错");
                     }
-                } 
+                }
+                else if (input.ToLower() == "add1")
+                {
+                    WriteColorLine("请输入目录 ?", ConsoleColor.Yellow);
+                    input = Console.ReadLine();
+                    if (!string.IsNullOrEmpty(input) && Directory.Exists(input))
+                    { 
+                        string[] images = Directory.GetFiles(input, "*.*", SearchOption.AllDirectories); 
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+                        int a = 0, b = 0, c = 0;
+                        List<string> list = new List<string>();
+                        foreach (var image in images)
+                        { 
+                            string result = "";
+                            try
+                            { 
+                                //将图片转换成base64
+                                var base64 = FaceServer.ImgToBase64String(image);
+                                FaceServer.FaceEntry(base64,Guid.NewGuid().ToString());
+                                m_logger.Debug("{0},识别为{1}", image, result);
+                            }
+                            catch (Exception ex)
+                            {
+                                //m_logger.Debug("{0},识别为{1}", image, result);
+                            } 
+
+                        } 
+                    }
+                    else
+                    {
+                        m_logger.Error("目录不存在或出错");
+                    }
+                }
                 input = Console.ReadLine();
             } while (true);
         }
